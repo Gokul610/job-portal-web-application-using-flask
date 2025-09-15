@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPortal</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <nav class="container nav-container">
+            <a href="/" class="logo">Job Portal</a>
+            <div id="nav-buttons" class="nav-buttons-container">
+                
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+        <div class="hero-section">
+            <h2 class="hero-title">Find Your Next Opportunity</h2>
+            <div class="search-wrapper">
+                <form id="search-form" class="search-form">
+                    <input type="search" id="search-input" placeholder="Search by title, company, or skill..." class="search-input">
+                    <button type="submit" class="btn btn-primary search-btn">Search</button>
+                </form>
+            </div>
+        </div>
+        <div id="job-listings-container" class="job-listings-container">
+            <p id="loading-indicator" class="loading-indicator">Loading job posts...</p>
+        </div>
+    </main>
+
+    
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+            </div>
+            <form id="login-form" class="modal-form">
+                <input type="email" id="login-email" placeholder="Email" class="form-input" required>
+                <div class="password-container" >
+                    <input type="password" id="login-password" placeholder="Password" class="form-input" required>
+                    <i class="fa-solid fa-eye toggle-password"></i>
+                </div>
+                <p id="login-error-msg" class="error-message"></p>
+                <div id="resend-verification-container" class="resend-verification"></div>
+                <button type="submit" class="btn btn-primary btn-full">Log In</button>
+            </form>
+            <button class="close-modal-btn">&times;</button>
+        </div>
+    </div>
+
+    
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content modal-lg">
+            <div id="register-content">
+                <h3 class="modal-title">Create Your Account</h3>
+                <div class="progress-bar">
+                    <div id="progress-1" class="progress-indicator active">Account</div>
+                    <div id="progress-2" class="progress-indicator">Details</div>
+                    <div id="progress-3" class="progress-indicator">Finalize</div>
+                </div>
+                <form id="register-form">
+                    <div id="step-1" class="step">
+                        <input type="email" name="register-email" placeholder="Email" class="form-input" required>
+                        <div class="password-container">
+                            <input type="password" name="register-password" placeholder="Password (min 8 chars)" class="form-input" required minlength="8">
+                             <i class="fa-solid fa-eye toggle-password"></i>
+                        </div>
+                        <div class="password-container">
+                            <input type="password" name="register-confirm-password" placeholder="Confirm Password" class="form-input" required>
+                             <i class="fa-solid fa-eye toggle-password"></i>
+                        </div>
+                        <div class="step-nav"><button type="button" class="btn btn-primary next-step-btn">Next</button></div>
+                    </div>
+                    <div id="step-2" class="step hidden">
+                        <input type="text" name="register-first-name" placeholder="First Name" class="form-input" required>
+                        <input type="text" name="register-last-name" placeholder="Last Name" class="form-input" required>
+                        <input type="date" name="register-dob" class="form-input" required>
+                        <div class="step-nav-between">
+                            <button type="button" class="btn btn-secondary prev-step-btn">Previous</button>
+                            <button type="button" class="btn btn-primary next-step-btn">Next</button>
+                        </div>
+                    </div>
+                    <div id="step-3" class="step hidden">
+                        <label class="form-label">Register As:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="userType" value="3" class="form-radio" checked> Job Seeker</label>
+                            <label><input type="radio" name="userType" value="2" class="form-radio"> Employer</label>
+                            <label><input type="radio" name="userType" value="1" class="form-radio"> Admin</label>
+                        </div>
+                        <div id="personal-details-fields">
+                            <p class="form-hint">Please provide your highest qualification.</p>
+                            <input type="text" name="register-education" placeholder="Educational Qualification" class="form-input" required>
+                        </div>
+                        <div id="employer-field" class="hidden">
+                            <p class="form-hint">Please provide your company's name.</p>
+                            <input type="text" name="register-company" placeholder="Company Name" class="form-input">
+                        </div>
+                        <div class="step-nav-between">
+                            <button type="button" class="btn btn-secondary prev-step-btn">Previous</button>
+                            <button type="submit" class="btn btn-success">Register</button>
+                        </div>
+                    </div>
+                </form>
+                <p id="register-error-msg" class="error-message"></p>
+            </div>
+            <div id="register-success" class="hidden success-message-container">
+                <h3 class="success-title">Registration Submitted!</h3>
+                <p id="register-success-message"></p>
+                <button id="close-success-btn" class="btn btn-primary btn-full">Close</button>
+            </div>
+            <button class="close-modal-btn">&times;</button>
+        </div>
+    </div>
+
+    
+    <div id="apply-modal" class="modal hidden">
+        <div class="modal-content modal-lg apply-modal-content">
+            <div class="modal-header-styled">
+                <h3 id="apply-modal-title">Apply for Job</h3>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <form id="apply-form" class="apply-form">
+                <div class="apply-form-body">
+                    <input type="hidden" name="apply-job-id">
+                    <div class="apply-grid">
+                        <div><label class="form-label">Full Name</label><input type="text" name="apply-name" class="form-input-readonly" readonly></div>
+                        <div><label class="form-label">Email</label><input type="email" name="apply-email" class="form-input-readonly" readonly></div>
+                        <div><label class="form-label">Phone Number</label><input type="tel" name="phone_number" class="form-input" required></div>
+                        <div><label class="form-label">Gender</label><select name="gender" class="form-input" required><option value="">Select Gender</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
+                    </div>
+                    <div><label class="form-label">Preferred Location</label><input type="text" name="preferred_location" class="form-input"></div>
+                    <div><label class="form-label">Expected Salary (Optional)</label><input type="text" name="expected_salary" class="form-input"></div>
+                    <div><label class="form-label">Upload Resume/CV (PDF only)</label><input type="file" name="resume" class="form-input-file" accept=".pdf" required></div>
+                    <p id="apply-error-msg" class="error-message"></p>
+                </div>
+                <div class="modal-footer-styled"><button type="submit" class="btn btn-apply">Submit Application</button></div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div id="delete-confirm-modal" class="modal hidden">
+        <div class="modal-content modal-confirm">
+            <div class="confirm-icon-wrapper"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 class="confirm-title">Delete Job Post</h3>
+            <div class="confirm-text-wrapper"><p id="delete-confirm-text">Are you sure? This action cannot be undone.</p></div>
+            <div class="confirm-buttons">
+                <button id="delete-cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="delete-confirm-btn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="verification-success-modal" class="modal hidden">
+        <div class="modal-content modal-confirm">
+             <h3 class="success-title">Verification Successful!</h3>
+             <p class="mt-4">You can now log in to proceed.</p>
+             <button id="verified-login-btn" class="btn btn-primary btn-full">Log In</button>
+        </div>
+    </div>
+
+    
+    <div id="success-toast" class="hidden toast">
+        <div class="toast-icon"><i class="fa-solid fa-check"></i></div>
+        <div id="toast-message" class="toast-message">Message goes here.</div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4 class="footer-heading">For Job Seekers</h4>
+                    <ul>
+                        <li><a href="/">Search Jobs</a></li>
+                        <li><a id="footer-create-profile-link" href="#">Create Profile</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">For Employers</h4>
+                    <ul>
+                        <li><a id="footer-post-job-link" href="#">Post a Job</a></li>
+                        <li><a id="footer-employer-login-link" href="#">Employer Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Company</h4>
+                    <ul>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Stay Connected</h4>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                        <a href="https://x.com" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+           </div>
+           <hr class="footer-divider">
+           <div class="footer-bottom">
+               <p>&copy; 2025 JobPortal. All Rights Reserved.</p>
+               <ul>
+                   <li><a href="/privacy">Privacy Policy</a></li>
+                   <li><a href="/terms">Terms of Service</a></li>
+               </ul>
+           </div>
+        </div>
+    </footer>
+
+    
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

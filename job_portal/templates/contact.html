@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - JobPortal</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+</head>
+<body>
+
+    <header class="site-header">
+        <nav class="container nav-container">
+            <div class="nav-content">
+                <a href="/" class="logo">JobPortal</a>
+                <div id="nav-buttons" class="nav-buttons-container"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="contact-card">
+                <h1 class="page-title">Get in Touch</h1>
+                <p class="page-subtitle">We'd love to hear from you! Whether you have a question, feedback, or need support, our team is here to help.</p>
+
+                <div class="contact-grid">
+                    <div class="contact-info-box">
+                        <i class="fa-solid fa-envelope contact-icon"></i>
+                        <h2 class="info-box-title">Email Us</h2>
+                        <p class="info-box-text">For general inquiries, support, and feedback.</p>
+                        <a href="mailto:contact@jobPortal.com" class="info-box-link">contact@jobPortal.com</a>
+                    </div>
+                    <div class="contact-info-box">
+                        <i class="fa-solid fa-map-marker-alt contact-icon"></i>
+                        <h2 class="info-box-title">Our Office</h2>
+                        <p class="info-box-text">
+                            123 JobPortal Lane,<br>
+                            Chennai, Tamil Nadu, 600001<br>
+                            India
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="footer-container" class="site-footer-container"></footer>
+
+    <script src="{{ url_for('static', filename='js/shared.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setupSharedComponents();
+        });
+    </script>
+</body>
+</html>

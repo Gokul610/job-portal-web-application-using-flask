@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - JobPortal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+</head>
+<body>
+
+    <header class="site-header">
+        <nav class="container nav-container">
+            <div class="nav-content">
+                <a href="/" class="logo">JobPortal</a>
+                <div id="nav-buttons" class="nav-buttons-container"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="container">
+                <h1 class="hero-title">Connecting Talent with Opportunity</h1>
+                <p class="hero-subtitle">Our mission is to bridge the gap between skilled professionals and the world's best companies.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container content-container">
+                <div class="content-block">
+                    <h2 class="content-title">Who We Are</h2>
+                    <p class="content-text">JobPortal was founded with a simple idea: to make the job search process simpler, faster, and more effective for everyone involved. We are a dedicated team of technologists, recruiters, and career experts passionate about helping people find their dream jobs and helping companies build great teams.</p>
+                </div>
+                <div class="content-block">
+                    <h2 class="content-title">What We Do</h2>
+                    <p class="content-text">We provide a robust platform where job seekers can explore a vast range of opportunities, build their professional profiles, and apply with confidence. For employers, we offer a streamlined solution to post job openings, manage applications, and connect with a diverse pool of qualified candidates. Our platform is built on transparency, efficiency, and a commitment to quality.</p>
+                </div>
+                <div class="content-block">
+                    <h2 class="content-title">Our Vision</h2>
+                    <p class="content-text">We envision a world where every professional can find a fulfilling career that matches their skills and aspirations. We strive to be the most trusted and user-friendly job portal, continuously innovating to meet the evolving needs of the modern workforce.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer-container" class="site-footer-container"></footer>
+
+    <script src="{{ url_for('static', filename='js/shared.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setupSharedComponents();
+        });
+    </script>
+</body>
+</html>
+

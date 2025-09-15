@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - JobFinder</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="container">
+            <div class="nav-content">
+                <a href="/" class="logo">JobFinder</a>
+                <div id="nav-buttons" class="nav-buttons-container"></div>
+            </div>
+        </nav>
+    </header>
+    <main class="container main-content">
+        <div id="main-admin-view" class="view">
+            <div class="page-header">
+                <h2 class="page-title">Admin Dashboard</h2>
+                <div class="header-actions">
+                    <button id="view-users-btn" class="button secondary-button"><i class="fa-solid fa-users"></i>View Users</button>
+                    <button id="admin-create-job-btn" class="button primary-button"><i class="fa-solid fa-plus"></i>Post a New Job</button>
+                </div>
+            </div>
+            <div class="dashboard-section">
+                <h3 class="section-title">Admin Approval Requests</h3>
+                <div id="pending-admins-container" class="card">
+                    <div id="loading-admins-indicator" class="loading-indicator">Loading admin requests...</div>
+                </div>
+            </div>
+            <div class="dashboard-section">
+                <h3 class="section-title">Pending Job Approvals</h3>
+                <div id="pending-jobs-container" class="card">
+                    <div id="loading-pending-indicator" class="loading-indicator">Loading pending jobs...</div>
+                </div>
+            </div>
+            <div>
+                <h3 class="section-title">All Job Postings</h3>
+                <div id="all-jobs-container" class="card">
+                    <div id="loading-all-jobs-indicator" class="loading-indicator">Loading all jobs...</div>
+                    <div id="all-jobs-list"></div>
+                    <div id="load-more-container" class="load-more-wrapper"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="users-view" class="view hidden">
+             <div class="page-header">
+                <h2 class="page-title">All Users</h2>
+                <button id="back-to-admin-dash-btn" class="button secondary-button"><i class="fa-solid fa-arrow-left"></i>Back to Dashboard</button>
+            </div>
+             <div id="users-container" class="card">
+                 <div id="loading-users-indicator" class="loading-indicator">Loading users...</div>
+            </div>
+        </div>
+
+         <div id="admin-applicants-view" class="view hidden">
+             <div class="page-header">
+                <h2 id="admin-applicants-title" class="page-title">Applicants</h2>
+                <button id="back-to-admin-jobs-btn" class="button secondary-button"><i class="fa-solid fa-arrow-left"></i>Back to All Jobs</button>
+            </div>
+            <div class="card">
+                <div id="admin-loading-applicants-indicator" class="loading-indicator hidden">Loading applicants...</div>
+                <div id="admin-applicants-container"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="admin-create-job-modal" class="modal hidden">
+         <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Post a New Job (Admin)</h3>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <form id="admin-create-job-form" class="form-container">
+                <div class="modal-body form-body">
+                    <div class="form-field">
+                        <label class="form-label">Select Employer</label>
+                        <select name="employer_id" class="form-input" required></select>
+                    </div>
+                    <div class="form-grid">
+                        <div><label class="form-label">Job Title</label><input type="text" name="job_title" class="form-input" required></div>
+                        <div><label class="form-label">Location</label><input type="text" name="location" class="form-input" required></div>
+                        <div><label class="form-label">Job Type</label><select name="job_type" class="form-input"><option>Full-time</option><option>Part-time</option><option>Remote</option><option>Onsite</option></select></div>
+                        <div><label class="form-label">Salary Range</label><input type="text" name="salary_range" placeholder="e.g., 5 LPA - 8 LPA" class="form-input"></div>
+                        <div><label class="form-label">Number of Openings</label><input type="number" name="openings" class="form-input" min="1"></div>
+                        <div><label class="form-label">Application Deadline</label><input type="date" id="admin-app-deadline" name="application_deadline" class="form-input"></div>
+                    </div>
+                    <div><label class="form-label">Education Required</label><input type="text" name="education_required" class="form-input"></div>
+                    <div><label class="form-label">Skills Required (comma-separated)</label><input type="text" name="skills_required" class="form-input"></div>
+                    <div><label class="form-label">Job Description</label><textarea name="description" rows="5" class="form-input" required></textarea></div>
+                    <p id="admin-create-job-error-msg" class="error-message"></p>
+                </div>
+                <div class="modal-footer"><button type="submit" class="button green-button">Submit & Approve Job</button></div>
+            </form>
+        </div>
+    </div>
+    <div id="admin-delete-job-confirm-modal" class="modal hidden">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-body">
+                <h3 class="confirm-title">Are you sure?</h3>
+                <p id="delete-job-confirm-text" class="confirm-text">Do you really want to permanently delete this job post?</p>
+                <div class="confirm-actions">
+                    <button id="admin-delete-job-cancel-btn" class="button secondary-button">No, Cancel</button>
+                    <button id="admin-delete-job-confirm-btn" class="button red-button">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="admin-delete-user-confirm-modal" class="modal hidden">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-body">
+                 <h3 class="confirm-title">Delete User</h3>
+                 <p id="delete-user-confirm-text" class="confirm-text">This action cannot be undone.</p>
+                <div class="confirm-actions">
+                    <button id="admin-delete-user-cancel-btn" class="button secondary-button">No, Cancel</button>
+                    <button id="admin-delete-user-confirm-btn" class="button red-button">Yes, Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="admin-resume-viewer-modal" class="modal hidden">
+        <div class="resume-viewer-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Resume Viewer</h3>
+                <div>
+                    <a id="admin-download-resume-btn" href="#" download class="button blue-button">Download</a>
+                    <button class="close-modal-btn">&times;</button>
+                </div>
+            </div>
+            <div class="resume-iframe-container"><iframe id="admin-resume-iframe" src="" class="resume-iframe"></iframe></div>
+        </div>
+    </div>
+    <div id="success-toast" class="toast hidden" role="alert">
+        <div class="toast-icon-wrapper"><i class="fa-solid fa-check"></i></div>
+        <div id="toast-message" class="toast-message"></div>
+    </div>
+    <footer class="site-footer-main">
+        <div class="container">
+            <div class="footer-grid">
+                <div id="footer-job-seekers" class="footer-column"><h4 class="footer-heading">For Job Seekers</h4><ul><li><a href="/">Search Jobs</a></li><li><a href="/job_seeker_dashboard">My Dashboard</a></li></ul></div>
+                <div id="footer-employers" class="footer-column"><h4 class="footer-heading">For Employers</h4><ul><li><a href="/employer_dashboard">Post a Job</a></li><li><a href="/employer_dashboard">My Dashboard</a></li></ul></div>
+                <div class="footer-column"><h4 class="footer-heading">Company</h4><ul><li><a href="/about">About Us</a></li><li><a href="/contact">Contact Us</a></li></ul></div>
+                <div class="footer-column"><h4 class="footer-heading">Stay Connected</h4><div class="social-links"><a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a><a href="https://x.com" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a></div></div>
+           </div>
+           <hr class="footer-divider">
+           <div class="footer-copyright"><p>&copy; 2025 JobFinder. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+</body>
+</html>

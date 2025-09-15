@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USER: root
+      DATABASE_PASSWORD: 'Karthick7'
+      DATABASE_NAME: job_portal_db1
+      SECRET_KEY: d5d28018304c0e24c4e21167073e9266
+      MAIL_SERVER: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USE_TLS: 'true'
+      MAIL_USERNAME: gokulakarthik623@gmail.com
+      MAIL_PASSWORD: ZXFAULTYNCBTPAR
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'Karthick7'
+      MYSQL_DATABASE: job_portal_db1
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 'Karthick7'
+    ports:
+      - "3307:3306"

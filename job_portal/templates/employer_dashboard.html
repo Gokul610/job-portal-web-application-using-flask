@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - JobPortal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/employer_dashboard.css') }}">
+</head>
+<body>
+
+    <header class="site-header">
+        <nav class="container">
+            <div class="nav-content">
+                <a href="/" class="logo">JobPortal</a>
+                <div id="nav-buttons" class="nav-buttons-container"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+        <div id="main-dashboard-view" class="view">
+            <div class="page-header">
+                <h2 class="page-title">Your Job Postings</h2>
+                <div class="header-actions">
+                    <button id="edit-profile-btn" class="button secondary-button"><i class="fa-solid fa-user-pen"></i>Edit Profile</button>
+                    <button id="create-job-btn" class="button primary-button"><i class="fa-solid fa-plus"></i>Create Job Post</button>
+                </div>
+            </div>
+            <div id="job-postings-container" class="card">
+                <div id="loading-jobs-indicator" class="loading-indicator">Loading your job posts...</div>
+            </div>
+        </div>
+
+        <div id="applicants-view" class="view hidden">
+            <div class="page-header">
+                <h2 id="applicants-title" class="page-title">Applicants</h2>
+                <button id="back-to-dashboard-btn" class="button secondary-button"><i class="fa-solid fa-arrow-left"></i>Back to My Jobs</button>
+            </div>
+            <div id="applicants-container" class="card">
+                <div id="loading-applicants-indicator" class="loading-indicator">Loading applicants...</div>
+            </div>
+        </div>
+    </main>
+
+    <div id="edit-employer-profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Company Profile</h3>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                 <form id="edit-employer-profile-form" class="form">
+                    <div class="form-grid">
+                        <div><label class="form-label">Contact First Name</label><input type="text" name="contact_first_name" class="form-input" required></div>
+                        <div><label class="form-label">Contact Last Name</label><input type="text" name="contact_last_name" class="form-input" required></div>
+                    </div>
+                    <div><label class="form-label">Company Name</label><input type="text" name="company_name" class="form-input" required></div>
+                    <div><label class="form-label">Company Location</label><input type="text" name="company_location" class="form-input"></div>
+                    <div><label class="form-label">Company Website</label><input type="url" name="company_website" class="form-input"></div>
+                    <div><label class="form-label">Company Description</label><textarea name="company_description" rows="4" class="form-input"></textarea></div>
+                    <p id="employer-profile-error-msg" class="error-message"></p>
+                 </form>
+                 <hr>
+                 <h4 class="form-section-title">Change Password</h4>
+                 <form id="employer-change-password-form" class="form">
+                    <div class="form-grid">
+                        <div><label class="form-label">Old Password</label><input type="password" name="old_password" class="form-input" required></div>
+                        <div><label class="form-label">New Password</label><input type="password" name="new_password" class="form-input" required minlength="8"></div>
+                    </div>
+                    <p id="employer-password-error-msg" class="error-message"></p>
+                 </form>
+            </div>
+             <div class="modal-footer">
+                <button type="submit" form="edit-employer-profile-form" class="button blue-button">Save Changes</button>
+                <button type="submit" form="employer-change-password-form" class="button dark-button">Update Password</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="create-job-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Post a New Job</h3>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <form id="create-job-form" class="form-container">
+                <div class="modal-body form-body">
+                    <div class="form-grid">
+                        <div><label class="form-label">Job Title</label><input type="text" name="job_title" class="form-input" required></div>
+                        <div><label class="form-label">Location</label><input type="text" name="location" class="form-input" required></div>
+                        <div><label class="form-label">Job Type</label><select name="job_type" class="form-input"><option>Full-time</option><option>Part-time</option><option>Remote</option><option>Onsite</option></select></div>
+                        <div><label class="form-label">Salary Range</label><input type="text" name="salary_range" placeholder="e.g., 5 LPA - 8 LPA" class="form-input"></div>
+                        <div><label class="form-label">Number of Openings</label><input type="number" name="openings" class="form-input" min="1"></div>
+                        <div><label class="form-label">Application Deadline</label><input type="date" id="employer-app-deadline" name="application_deadline" class="form-input"></div>
+                    </div>
+                    <div><label class="form-label">Education Required</label><input type="text" name="education_required" class="form-input"></div>
+                    <div><label class="form-label">Skills Required (comma-separated)</label><input type="text" name="skills_required" class="form-input"></div>
+                    <div><label class="form-label">Job Description</label><textarea name="description" rows="5" class="form-input" required></textarea></div>
+                    <p id="create-job-error-msg" class="error-message"></p>
+                </div>
+                <div class="modal-footer form-footer"><button type="submit" class="button green-button">Submit for Approval</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="resume-viewer-modal" class="modal hidden">
+        <div class="resume-viewer-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Resume Viewer</h3>
+                <div>
+                    <a id="download-resume-btn" href="#" download class="button blue-button">Download</a>
+                    <button class="close-modal-btn">&times;</button>
+                </div>
+            </div>
+            <div class="resume-iframe-container"><iframe id="resume-iframe" src="" class="resume-iframe"></iframe></div>
+        </div>
+    </div>
+
+    <div id="delete-job-confirm-modal" class="modal hidden">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-body">
+                <h3 class="confirm-title">Are you sure?</h3>
+                <p class="confirm-text">Do you really want to permanently delete this job post? This action cannot be undone.</p>
+                <div class="confirm-actions">
+                    <button id="delete-job-cancel-btn" class="button secondary-button">No, Cancel</button>
+                    <button id="delete-job-confirm-btn" class="button red-button">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-toast" class="toast hidden" role="alert">
+        <div class="toast-icon-wrapper"><i class="fa-solid fa-check"></i></div>
+        <div id="toast-message" class="toast-message"></div>
+    </div>
+
+    <footer class="site-footer-main">
+        <div class="container">
+            <div class="footer-grid">
+                <div id="footer-job-seekers" class="footer-column"><h4 class="footer-heading">For Job Seekers</h4><ul><li><a href="/">Search Jobs</a></li><li><a href="/job_seeker_dashboard">Create Profile</a></li></ul></div>
+                <div id="footer-employers" class="footer-column"><h4 class="footer-heading">For Employers</h4><ul><li><a href="/employer_dashboard">Post a Job</a></li><li><a href="/">Employer Login</a></li></ul></div>
+                <div class="footer-column"><h4 class="footer-heading">Company</h4><ul><li><a href="/about">About Us</a></li><li><a href="/contact">Contact Us</a></li></ul></div>
+                <div class="footer-column"><h4 class="footer-heading">Stay Connected</h4><div class="social-links"><a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a><a href="https://x.com" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a></div></div>
+           </div>
+           <hr class="footer-divider">
+           <div class="footer-copyright"><p>&copy; 2025 JobPortal. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/employer_dashboard.js') }}"></script>
+</body>
+</html>
