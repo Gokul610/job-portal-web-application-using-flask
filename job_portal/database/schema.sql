@@ -129,8 +129,7 @@ COMMENT = 'Stores one preferred job role per row for a job seeker.';
 ENGINE = InnoDB;*/
 
 ALTER TABLE `Users` ADD COLUMN `status` VARCHAR(20) NOT NULL DEFAULT 'active';
-ALTER TABLE Users
-ADD COLUMN status_flag VARCHAR(20) NOT NULL DEFAULT 'pending';
+ALTER TABLE `Users` ADD COLUMN status_flag VARCHAR(20) NOT NULL DEFAULT 'pending';
 UPDATE Users SET status_flag = 'active' WHERE user_id > 0;
 
 CREATE TABLE company_employees (
